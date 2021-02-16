@@ -1,0 +1,19 @@
+{
+  "name": "dice-game",
+  "version": "1.0.0",
+  "description": "Dice game",
+  "main": "./app/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JDFIREX/Dice-Game.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JDFIREX/Dice-Game/issues"
+  },
+  "homepage": "https://github.com/JDFIREX/Dice-Game#readme"
+}

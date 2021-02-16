@@ -1,0 +1,166 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  min-width: 1920px;
+  max-width: 1920px;
+  height: 900px;
+  min-height: 900px;
+  max-height: 900px;
+  border-bottom: 1px solid red;
+}
+
+.languages {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: rgba(0, 0, 0, 0.534);
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  z-index: 200000000000000;
+}
+
+.languages .lan_list {
+  position: relative;
+  top: 325px;
+  padding: 0 1rem;
+  background-color: rgba(0, 0, 0, 0.432);
+  border-radius: 5px;
+  height: 250px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+
+.languages .lan_list .lan_item {
+  margin: 0 3rem 0 3rem;
+  width: 225px;
+}
+
+.languages .lan_list .lan_item img {
+  display: block;
+  border-radius: 2px;
+}
+
+.settings {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+}
+
+.settings img {
+  width: 2rem;
+  height: 2rem;
+}
+
+.settings_box {
+  position: absolute;
+  bottom: 5rem;
+  left: 1rem;
+  width: 10rem;
+  border-radius: 10px;
+  border-bottom-left-radius: 0;
+  height: 14rem;
+  padding-top: .5rem;
+  background-color: rgba(0, 0, 0, 0.849);
+}
+
+.settings_box ul {
+  list-style-type: none;
+  width: 100%;
+}
+
+.settings_box ul li {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  color: white;
+  padding: .5rem 0rem .5rem 1rem;
+  font-size: .9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.settings_box::before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: .4rem;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid rgba(0, 0, 0, 0.849);
+  z-index: -2;
+}
+
+header {
+  width: 100%;
+  height: 800px;
+}
+
+header .Logo {
+  width: 100%;
+  height: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+header nav {
+  width: 100%;
+  height: auto;
+}
+
+header nav ul {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  list-style-type: none;
+}
+
+header nav ul li {
+  padding: 0 4rem;
+}
+
+header nav ul li:nth-child(1) {
+  border-right: 1px solid gray;
+}
+
+header nav ul li:nth-child(2) {
+  border-left: 1px solid gray;
+}
+/*# sourceMappingURL=style.css.map */
