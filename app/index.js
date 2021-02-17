@@ -5,12 +5,23 @@ const polski = {
     },
     "Settings" : {
         "items" : ["Języki","Ułożenie","Zasady"]
+    },
+    "Hover" : {
+        "item1" : ["Polski","Angielski"],
+        "item2" : ["Po Lewej", "Po Prawej"]
     }
 }
 
 const angielski = {
     "Header" : {
         "items" : ["GAME","GAME HISTORY "]
+    },
+    "Settings" : {
+        "items" : ["Languages","Set","Rules"]
+    },
+    "Hover" : {
+        "item1" : ["POLISH","ENGLISH"],
+        "item2" : ["On Left", "On Right"]
     }
 }
 
@@ -49,7 +60,6 @@ function setLan(first = true){
     })
     
     if(first){
-        console.log("zamykanie")
         writeData.then(r => {
             setTimeout(() => {
                 document.querySelector(".lan_list").style.top  = "-500px";
@@ -76,3 +86,92 @@ document.querySelector(".item-2").addEventListener("click", () => {
         setLan(first = false)
     })
 })
+
+
+// settings 
+
+let settings = document.querySelector(".settings");
+let settingsOpen = false;
+
+let itemHover = document.querySelectorAll(".item_hover");
+let settingHover = document.querySelector(".settings_hover")
+let settingBox = document.querySelector(".settings_box")
+let list = document.querySelector(".hover_list")
+
+settings.addEventListener("click", ShowSettings)
+
+function ShowSettings(){
+
+    if(!settingsOpen){
+        settingsOpen = !settingsOpen
+        settingBox.style.opacity = "1";
+        settingBox.style.left = "1rem"
+
+        // window.addEventListener("click", ListenClick)
+
+    }else if(settingsOpen) {
+        settingsOpen = !settingsOpen
+        settingBox.style.opacity = "0";
+        settingBox.style.left = "-40rem"
+    }
+
+}
+
+// function ListenClick(e){
+
+//     console.log(e.path[0])
+
+// }
+
+// settings hover box 
+
+
+
+
+itemHover.forEach(l => {
+    l.addEventListener("mouseover", ShowHoverSettings);
+    settingBox.addEventListener("mouseleave", HideHoverSettings)
+})
+
+function ShowHoverSettings(e){
+    let item = e.path[0].dataset.item;
+    let listItems = ""
+    let createList = new Promise(resolve => {
+
+        jezyk["Hover"][item].forEach((i,b,c) => {
+            if(b == c.length - 1){
+                listItems += `<li class="hover_item" style="border-bottom:none;">${i}</li>`;
+            }else{
+                listItems += `<li class="hover_item">${i}</li>`;
+            }
+        });
+
+        resolve(listItems)
+    })
+    
+    createList.then(r => {
+        list.innerHTML = r
+    })
+
+    createList.then(r => {
+
+        setTimeout(() => {
+            settingHover.style.opacity = "1"
+        }, 50);
+
+        let BoxCoords = e.path[0].getBoundingClientRect();
+        let settingBoxCoords = settingBox.getBoundingClientRect()
+        settingBox.style.width = "20rem"
+        settingHover.style.top = ((settingBoxCoords.top - BoxCoords.top) * -1) -8 +"px";
+        settingHover.style.left = (BoxCoords.left + BoxCoords.width + 5) +"px";
+
+    })
+
+}
+function HideHoverSettings(){
+        settingHover.style.opacity = "0"
+        settingHover.style.top = "0";
+        settingHover.style.left = "-40rem";
+        settingBox.style.width = "auto"
+        list.innerHTML = "";
+}
