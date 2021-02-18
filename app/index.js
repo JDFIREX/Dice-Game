@@ -57,6 +57,10 @@ function setLan(first = true){
         document.querySelectorAll(".settings_item")
         .forEach((i,p) => i.innerHTML = jezyk["Settings"].items[p])
         resolve(document.querySelectorAll(".nav_item"))
+        document.querySelectorAll(".hover_item").forEach((l,b) => {
+            l.innerHTML = jezyk.Hover.item1[b];
+            l.dataset.value = jezyk.Hover.item1[b];
+        })
     })
     
     if(first){
@@ -74,18 +78,6 @@ function setLan(first = true){
         })
     }
 }
-
-
-document.querySelector(".item-2").addEventListener("click", () => {
-    let chooseLan = new Promise(resolve => {
-        jezyk = angielski;
-        resolve(jezyk)
-    })
-
-    chooseLan.then(r => {
-        setLan(first = false)
-    })
-})
 
 
 // settings 
@@ -107,7 +99,7 @@ function ShowSettings(){
         settingBox.style.opacity = "1";
         settingBox.style.left = "1rem"
 
-        // window.addEventListener("click", ListenClick)
+        window.addEventListener("click", ListenClick)
 
     }else if(settingsOpen) {
         settingsOpen = !settingsOpen
@@ -117,11 +109,16 @@ function ShowSettings(){
 
 }
 
-// function ListenClick(e){
+function ListenClick(e){
+    let clickList = ["settings_box","setting_list","settings_item", "hover_list","settings_hover","hover_item","settings_btn"];
 
-//     console.log(e.path[0])
-
-// }
+    if(!clickList.includes(e.path[0].classList[0])){
+        settingsOpen = false;
+        settingBox.style.opacity = "0";
+        settingBox.style.left = "-40rem"
+        window.removeEventListener("click", ListenClick)
+    }
+}
 
 // settings hover box 
 
@@ -140,9 +137,9 @@ function ShowHoverSettings(e){
 
         jezyk["Hover"][item].forEach((i,b,c) => {
             if(b == c.length - 1){
-                listItems += `<li class="hover_item" style="border-bottom:none;">${i}</li>`;
+                listItems += `<li class="hover_item" style="border-bottom:none;" data-value="${i}">${i}</li>`;
             }else{
-                listItems += `<li class="hover_item">${i}</li>`;
+                listItems += `<li class="hover_item" data-value="${i}">${i}</li>`;
             }
         });
 
@@ -151,6 +148,7 @@ function ShowHoverSettings(e){
     
     createList.then(r => {
         list.innerHTML = r
+        document.querySelectorAll(".hover_item").forEach(l => l.addEventListener("click", (e) => settingsChange(e)))
     })
 
     createList.then(r => {
@@ -174,4 +172,20 @@ function HideHoverSettings(){
         settingHover.style.left = "-40rem";
         settingBox.style.width = "auto"
         list.innerHTML = "";
+}
+
+
+function settingsChange(e){
+    let value = e.path[0].dataset.value;
+
+    switch(value){
+        case jezyk["Hover"]["item1"][0] : 
+            jezyk = polski;
+            setLan(first = false);
+        ; break;
+        case jezyk["Hover"]["item1"][1] : 
+            jezyk = angielski;
+            setLan(first = false); 
+        ; break;
+    }
 }
