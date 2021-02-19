@@ -28,7 +28,6 @@ const angielski = {
 
 let jezyk;
 
-
 // wczytanie danych
 
 const lans = document.querySelectorAll(".lan_item");
@@ -49,6 +48,9 @@ lans.forEach(l => {
         
     })
 })
+
+// ustawianie jezyka
+
 
 function setLan(first = true){
     let writeData = new Promise(resolve => {
@@ -92,6 +94,8 @@ let list = document.querySelector(".hover_list")
 
 settings.addEventListener("click", ShowSettings)
 
+// pokazywanie ustawien
+
 function ShowSettings(){
 
     if(!settingsOpen){
@@ -109,6 +113,8 @@ function ShowSettings(){
 
 }
 
+// zamykanie ustawien jak sie kliknie poza okno ustawien
+
 function ListenClick(e){
     let clickList = ["settings_box","setting_list","settings_item", "hover_list","settings_hover","hover_item","settings_btn"];
 
@@ -122,13 +128,12 @@ function ListenClick(e){
 
 // settings hover box 
 
-
-
-
 itemHover.forEach(l => {
     l.addEventListener("mouseover", ShowHoverSettings);
     settingBox.addEventListener("mouseleave", HideHoverSettings)
 })
+
+// ustawienia na najechanie myszką na dane ustawienie
 
 function ShowHoverSettings(e){
     let item = e.path[0].dataset.item;
@@ -166,6 +171,9 @@ function ShowHoverSettings(e){
     })
 
 }
+
+// chowanie ustawień danego ustawienia na które sie najechało po tym jak sie zjedzie z tych ustawien
+
 function HideHoverSettings(){
         settingHover.style.opacity = "0"
         settingHover.style.top = "0";
@@ -173,6 +181,8 @@ function HideHoverSettings(){
         settingBox.style.width = "auto"
         list.innerHTML = "";
 }
+
+// zmiana jezyka poprzez ustawienia 
 
 
 function settingsChange(e){
@@ -189,3 +199,8 @@ function settingsChange(e){
         ; break;
     }
 }
+
+
+
+
+// zacznięcie gry 
