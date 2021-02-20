@@ -207,14 +207,14 @@ function settingsChange(e){
 
 // zacznięcie gry 
 
-
-
-
 let start = document.querySelector(".btn_start");
+let repeatBtn = document.querySelector(".repeat_btn")
 let user1 = document.querySelector(".user_1");
 let user2 = document.querySelector(".user_2");
+let user3 = document.querySelector(".user_3");
+let user4 = document.querySelector(".user_4");
 
-let user1Points = {
+let defaultPoints = {
     jedynki : {
         score : 0,
         confirm : false
@@ -271,244 +271,289 @@ let user1Points = {
     sumax2: 0,
     razem : 0
 }
+let user1Points = JSON.parse(JSON.stringify(defaultPoints))
+let user2Points = JSON.parse(JSON.stringify(defaultPoints))
+let user3Points = JSON.parse(JSON.stringify(defaultPoints))
+let user4Points = JSON.parse(JSON.stringify(defaultPoints)) 
 
-let user2Points = {
-    jedynki : {
-        score : 0,
-        confirm : false
-    },
-    dwojki : {
-        score : 0,
-        confirm : false
-    },
-    trojki : {
-        score : 0,
-        confirm : false
-    },
-    czworki : {
-        score : 0,
-        confirm : false
-    },
-    piatki : {
-        score : 0,
-        confirm : false
-    },
-    szostki : {
-        score : 0,
-        confirm : false
-    },
-    sumax1 : 0,
-    trzyx : {
-        score : 0,
-        confirm : false
-    },
-    czteryx : {
-        score : 0,
-        confirm : false
-    },
-    full : {
-        score : 0,
-        confirm : false
-    },
-    maly: {
-        score : 0,
-        confirm : false
-    },
-    duzy: {
-        score : 0,
-        confirm : false
-    },
-    general : {
-        score : 0,
-        confirm : false
-    },
-    szansa : {
-        score : 0,
-        confirm : false
-    },
-    sumax2: 0,
-    razem : 0
-}
-
-let user3Points = {
-    jedynki : {
-        score : 0,
-        confirm : false
-    },
-    dwojki : {
-        score : 0,
-        confirm : false
-    },
-    trojki : {
-        score : 0,
-        confirm : false
-    },
-    czworki : {
-        score : 0,
-        confirm : false
-    },
-    piatki : {
-        score : 0,
-        confirm : false
-    },
-    szostki : {
-        score : 0,
-        confirm : false
-    },
-    sumax1 : 0,
-    trzyx : {
-        score : 0,
-        confirm : false
-    },
-    czteryx : {
-        score : 0,
-        confirm : false
-    },
-    full : {
-        score : 0,
-        confirm : false
-    },
-    maly: {
-        score : 0,
-        confirm : false
-    },
-    duzy: {
-        score : 0,
-        confirm : false
-    },
-    general : {
-        score : 0,
-        confirm : false
-    },
-    szansa : {
-        score : 0,
-        confirm : false
-    },
-    sumax2: 0,
-    razem : 0
-}
-
-let user4Points = {
-    jedynki : {
-        score : 0,
-        confirm : false
-    },
-    dwojki : {
-        score : 0,
-        confirm : false
-    },
-    trojki : {
-        score : 0,
-        confirm : false
-    },
-    czworki : {
-        score : 0,
-        confirm : false
-    },
-    piatki : {
-        score : 0,
-        confirm : false
-    },
-    szostki : {
-        score : 0,
-        confirm : false
-    },
-    sumax1 : 0,
-    trzyx : {
-        score : 0,
-        confirm : false
-    },
-    czteryx : {
-        score : 0,
-        confirm : false
-    },
-    full : {
-        score : 0,
-        confirm : false
-    },
-    maly: {
-        score : 0,
-        confirm : false
-    },
-    duzy: {
-        score : 0,
-        confirm : false
-    },
-    general : {
-        score : 0,
-        confirm : false
-    },
-    szansa : {
-        score : 0,
-        confirm : false
-    },
-    sumax2: 0,
-    razem : 0
-}
 
 
 let round = 0;
+let repeat = 0;
+let currentUser = 0;
 
 start.addEventListener("click", (e) => {
     
+    start.style.opacity = "0"
+
     StartGame(user1)
+
+    setTimeout(() => {
+        start.style.display = 'none'
+    }, 300);
 
 })
 
 function StartGame(user){
 
-    // round++;
+    currentUser = Number(user.dataset.user)
 
-    let Game = new Promise(resolve => {
-        let score = FirstRole(user)
-
-        resolve(score)
-    })
-
-    Game.then(r => {
-
-        CountScore(r,user)
-
-    })
-
-}
-
-
-
-
-function FirstRole(user){
-
-    // dla podanego user powinno sie pobrac jego kostki i wykonać wylosowanie
-    // zastosowanie Math.random do wylosowania 1 - 5 liczby potem wykonanie animacji która obróci każdą kostkę na daną stronę gdzie
-    // znajduje sie liczba oczek taka jaka została wylosowana za pomocą switch pod sam koniec w tablicy zwraca wylosowane kostki
-    // w kolejnosci od lewej -> lewa 1 korstka = 1 losowy numer 
+    if(user.dataset.user == "1"){
+        if(round < 13){
+            round++
+            repeat = 0;
+            FirstRole(user)
+        }else{
+            console.log("koniec")
+            console.log(user1Points)
+            console.log(user2Points)
+            console.log(user3Points)
+            console.log(user4Points)
+        }
+    }else{
+        BotRole(user)
+    }
 
 }
 
-function randomScore(){
-    round++;
-    if(round <= 13){
-        let s = [];
+// bot 
 
+function BotRole(user){
+
+    let kostki = user.querySelector(".kostki");
+
+    let s = []
+
+    let randomScore = new Promise(resolve => {
         for(let i = 0; i < 5 ; i++){
             let r = Math.ceil(Math.random() * 6)
             s.push(r)
         }
 
-        CountScore(s,user2)
+        SetKostkiPoints(s,user,kostki)
+        // CountScore(s,user,kostki,time = 1)
+    })
+
+
+
+}
+
+//  my - gracz 1
+
+function FirstRole(user){
+
+    repeat = 0;
+
+    let kostki = user1.querySelector(".kostki");
+
+    repeatBtn.style.display = "block";
+    setTimeout(() => {
+        repeatBtn.style.opacity = "1";
+    }, 300);
+
+    // losowanie punktow
+
+    let s = [];
+
+    let randomScore = new Promise(resolve => {
+        for(let i = 0; i < 5 ; i++){
+            let r = Math.ceil(Math.random() * 6)
+            s.push(r)
+        }
+
+        resolve(s)
+    })
+
+    // ustwanie punktow dla losow i tworzenie mozliwosci kolejnego losu 
+
+    randomScore.then(r => {
+        
+        repeatBtn.addEventListener("click",NewRole,true)
+
+        SetKostkiPoints(r,user,kostki)
+
+        for(let i = 0; i <= 4 ; i++){
+            kostki.children[i].addEventListener('click', kostkaSave,true)
+        }
+
+    })
+
+}
+
+//   rotacja kostek
+
+const rzucKostka = (kostka,x) => {
+    
+    switch(x){
+        case 1:
+            kostka.dataset.val = Number(x);
+            kostka.style.transform ="rotateX(0deg) rotateY(0deg)";
+        ;break;
+        case 2:
+            kostka.dataset.val = Number(x);
+            kostka.style.transform ="rotateY(-90deg) rotateX(0deg)";
+        ;break;
+        case 3:
+            kostka.dataset.val = Number(x);
+            kostka.style.transform ="rotateX(90deg) rotateY(0deg)";
+        ;break;
+        case 4:
+            kostka.dataset.val = Number(x);
+            kostka.style.transform ="rotateX(-90deg) rotateY(0deg)";
+        ;break;
+        case 5:
+            kostka.dataset.val = Number(x);
+            kostka.style.transform ="rotateY(90deg) rotateX(0deg)";
+        ;break;
+        case 6:
+            kostka.dataset.val = Number(x);
+            kostka.style.transform ="rotateX(180deg) rotateY(0deg)";
+        ;break;
     }
-    else{
-        console.log(user2Points)
-        console.log("koniec")
+
+}
+
+// ustwia punkty kostek i wywoluje rotacje
+
+const SetKostkiPoints = (r,user,kostki,time = 1) => {
+    
+    let mapPoints = new Promise (resolve => {
+
+        r.map((x,b) => {
+
+            switch(b){
+                case 0 : 
+                    if(user.querySelector(".kostka_1").dataset.save == "false"){
+                        rzucKostka(user.querySelector(".kostka_1"),x)
+                    };
+                break;
+                case 1 : 
+                    if(user.querySelector(".kostka_2").dataset.save == "false"){
+                        rzucKostka(user.querySelector(".kostka_2"),x)
+                    };
+                break;
+                case 2 : 
+                    if(user.querySelector(".kostka_3").dataset.save == "false"){
+                        rzucKostka(user.querySelector(".kostka_3"),x)
+                    };
+                break;
+                case 3 : 
+                    if(user.querySelector(".kostka_4").dataset.save == "false"){
+                        rzucKostka(user.querySelector(".kostka_4"),x)
+                    };
+                break;
+                case 4 : 
+                    if(user.querySelector(".kostka_5").dataset.save == "false"){
+                        rzucKostka(user.querySelector(".kostka_5"),x)
+                    };
+                break;
+                default: null; break;
+            }
+    
+        })
+
+        resolve(r)
+
+    })
+
+    mapPoints.then(r => {
+
+        let points = [];
+
+        for(let i = 0; i < 5; i++){
+
+            points.push(Number(kostki.children[i].dataset.val))
+
+        }
+
+        CountScore(points,user,kostki,time)
+
+    })
+    
+
+}
+
+// klikajac kostke zabezpiecza ja przed kolejna rocja
+
+const kostkaSave = (e) => {
+
+
+    let save = new Promise(resolve => {
+
+        e.path[1].dataset.save == "true" ? e.path[1].dataset.save = "false" : e.path[1].dataset.save = "true";
+
+        resolve(e.path[1])
+    })
+    
+    save.then(r => {
+
+        if(r.dataset.save == "true"){
+            for(let i = 0 ;i <= 5; i++){
+                r.children[i].style.backgroundColor = "red";
+            }
+        }else{
+            for(let i = 0 ;i <= 5; i++){
+                r.children[i].style.backgroundColor = "white";
+            }
+        }
+        
+    })
+
+}
+
+// kolejna rzut w rundzie
+
+const NewRole = (e) => {
+    
+    let kostki = user1.querySelector(".kostki");
+
+    repeat++;
+
+
+    if(repeat < 3){
+
+
+        let role = new Promise(resolve => {
+
+            s = [];
+
+            for(let i = 0; i < 5 ; i++){
+                let r = Math.ceil(Math.random() * 6)
+                s.push(r)
+            }
+
+            resolve(s)
+
+        })
+
+        role.then(r => {
+
+            SetKostkiPoints(r,user1,kostki,time = 2)
+
+        })
+
+        if(repeat == 2){
+            repeatBtn.style.opacity = "0";
+            setTimeout(() => {
+                repeatBtn.style.display = "none";
+            }, 300);
+
+            for(let j = 0 ; j < 5 ; j++){
+                kostki.querySelectorAll(".kostka_side").forEach(k => k.style.backgroundColor = "white" )
+                kostki.children[j].removeEventListener('click', kostkaSave,true)
+                repeatBtn.removeEventListener("click", NewRole,true)
+            }
+        }
+
+
     }
+    
 }
 
 
-randomScore()
-
 //  zliczanie punktów
 
-function CountScore(score,user){
+function CountScore(score,user,kostki,time){
 
     let counting = new Promise(resolve => {
 
@@ -629,19 +674,20 @@ function CountScore(score,user){
 
         let tablica = document.querySelectorAll(`[data-player="${user}"]`);
 
+
         switch(user){
 
             case "1" :
-                SetPoints(tablica,user1Points,r,user)
+                SetPoints(tablica,user1Points,r,user,kostki,time)
             ;break;
             case "2" :
-                SetPoints(tablica,user2Points,r,user)
+                SetPoints(tablica,user2Points,r,user,kostki,time)
             ;break;
             case "3" :
-                SetPoints(tablica,user3Points,r,user)
+                SetPoints(tablica,user3Points,r,user,kostki,time)
             ;break;
             case "4" :
-                SetPoints(tablica,user4Points,r,user)
+                SetPoints(tablica,user4Points,r,user,kostki,time)
             ;break;
         }
 
@@ -650,8 +696,155 @@ function CountScore(score,user){
     
 }
 
+// ustawianie punktow w tabeli
 
-function SetPoints(tablica,userPoints,score,user){
+function SetPoints(tablica,userPoints,score,user,kostki,time){
+
+    // potwierdzanie punktow
+
+    const confirmPoints = (e) => {
+
+        // czyszczenie funkcji kostek
+
+        for(let j = 0 ; j < 5 ; j++){
+            kostki.querySelectorAll(".kostka_side").forEach(k => {
+                k.style.backgroundColor = "white"
+            } )
+            kostki.children[j].dataset.save = "false"
+            kostki.children[j].removeEventListener('click', kostkaSave,true)
+            repeatBtn.removeEventListener("click", NewRole,true)
+        }
+    
+    
+        repeatBtn.style.opacity = "0";
+        setTimeout(() => {
+            repeatBtn.style.display = "none";
+        }, 300);
+
+        // przypisywanie kliknietych punkow jako stalych nie zmiennych do konca gry
+    
+        let confirm = new Promise(resolve => {
+            let value = Number(e.path[0].innerHTML)
+            let cat = e.path[0].dataset.cat;
+    
+            userPoints[cat].score = value;
+            userPoints[cat].confirm = true;
+    
+    
+            tablica.forEach(t => {
+                t.removeEventListener("click", confirmPoints,true)
+            })
+            resolve(tablica)
+        })
+
+        confirm.then(r => {
+    
+            e.path[0].style.backgroundColor = "rgba(0, 0, 0, 0.603)"
+    
+            clearAndSumTable(r,userPoints) 
+    
+        })
+    
+        // wywolanie bota
+
+        confirm.then(r => {
+            setTimeout(() => {
+                StartGame(user2)
+            }, 2000);
+        })
+        
+    
+    }
+
+
+    // ustawanie punktow kiedy gra bot
+
+    const BotConfirmPoints = () => {
+
+        // szukanie najwyższej liczby punktow
+
+        let findMaxPoint = new Promise(resolve => {
+            let sort = [...score];
+            sort = sort.sort((a,b) => a - b).reverse();
+            let pos = 0;
+            let max = sort[pos];
+            let index;
+    
+            let findIndex = () => {
+    
+                index = score.indexOf(max)   
+    
+                if(max == 0){
+    
+                    let i = tablePoints.length - 1;
+                    let f = false;
+                    while(f == false){
+    
+                        if(userPoints[tablePoints[i].dataset.cat].confirm == false){
+    
+                            let value = Number(tablePoints[i].innerHTML)
+                            let cat = tablePoints[i].dataset.cat;
+                            userPoints[cat].score = value;
+                            userPoints[cat].confirm = true;
+                            index = i;
+                            f = true;
+                        }
+    
+                        i--;
+                    }
+    
+                }else if(userPoints[tablePoints[index].dataset.cat].confirm == true){
+                    pos++;
+                    max = sort[pos];
+                    findIndex();
+                }else{
+                    let value = Number(tablePoints[index].innerHTML)
+                    let cat = tablePoints[index].dataset.cat;
+                        userPoints[cat].score = value;
+                        userPoints[cat].confirm = true;
+                }
+            }
+    
+            findIndex()
+    
+            
+    
+            resolve(tablePoints[index])
+    
+        })
+    
+        // zatwierdzanie punkktow
+
+        findMaxPoint.then(r => {
+    
+            r.style.backgroundColor = "rgba(0, 0, 0, 0.603)"
+            clearAndSumTable(tablica,userPoints) ;
+    
+        });
+    
+        //wczytywanie kolejnego gracz
+
+        findMaxPoint.then(r => {
+            setTimeout(() => {
+                switch(currentUser){
+                    case 1: StartGame(user2); break;
+                    case 2: StartGame(user3); break;
+                    case 3: StartGame(user4); break;
+                    case 4: StartGame(user1); break;
+                }
+            }, 1000);
+        })
+    
+    
+    }
+
+    // usuwanie mozliwosci klikania punktow
+
+    tablica.forEach(t => {
+        t.removeEventListener("click", confirmPoints,true)
+    })
+
+    // tworzenie tabelicy tylko z polami w ktorych maja sie znajdowac punkty
 
     let tablePoints = []
     // wpisywanie w td punktow
@@ -668,6 +861,8 @@ function SetPoints(tablica,userPoints,score,user){
         resolve(tablePoints)
     })
 
+    // rzypisywanie do pol odpowiednie im punkty
+
     createTable.then(r => {
         score.forEach((s,b) => {
             if(userPoints[r[b].dataset.cat].confirm == false){
@@ -676,131 +871,32 @@ function SetPoints(tablica,userPoints,score,user){
         })
     })
 
-    // zatwierdzanie punktów
-
-    const confirmPoints = (e) => {
-
-        let confirm = new Promise(resolve => {
-            let value = Number(e.path[0].innerHTML)
-            let cat = e.path[0].dataset.cat;
-
-            userPoints[cat].score = value;
-            userPoints[cat].confirm = true;
-
-
-            tablica.forEach(t => {
-                t.removeEventListener("click", confirmPoints)
-            })
-            resolve(tablica)
-        })
-
-
-        confirm.then(r => {
-
-            e.path[0].style.backgroundColor = "rgba(0, 0, 0, 0.603)"
-
-            clearAndSumTable(r,userPoints) 
-
-        })
-
-        confirm.then(r => {
-            randomScore()
-        })
-        
-
-    }
-
-
-    // zatwierdzanie punktów dla botów
-
-    const BotConfirmPoints = () => {
-
-        let findMaxPoint = new Promise(resolve => {
-            let sort = [...score];
-            sort = sort.sort((a,b) => a - b).reverse();
-            let pos = 0;
-            let max = sort[pos];
-            let index;
-
-            let findIndex = (call = false) => {
-
-                if(call == false){
-                    index = score.indexOf(max)
-                }else if(call == true){
-                    index = call;
-                }   
-
-                if(max == 0){
-
-                    let f = false;
-                    let i = 0;
-                    // while(!f){
-                    //     Number(tablePoints[i].innerHTML) == 0 ? f = true : i++;
-                    // }
-
-                    findIndex(index = i)
-
-                }else if(userPoints[tablePoints[index].dataset.cat].confirm == true){
-                    pos++;
-                    max = sort[pos];
-                    findIndex();
-                }else{
-                    let value = Number(tablePoints[index].innerHTML)
-                    let cat = tablePoints[index].dataset.cat;
-                    console.log(value,"value")
-                    userPoints[cat].score = value;
-                    userPoints[cat].confirm = true;
-                }
-            }
-
-            findIndex()
-
-            
-
-            resolve(tablePoints[index])
-
-        })
-
-        findMaxPoint.then(r => {
-
-            r.style.backgroundColor = "rgba(0, 0, 0, 0.603)"
-            clearAndSumTable(tablica,userPoints) ;
-
-        });
-
-        findMaxPoint.then(r => {
-            setTimeout(() => {
-                randomScore()
-            }, 2000);
-        })
-
-
-    }
-
-
-
-    // ustawanie lisenera na klikniecie danego td by zatwierdzic punkty
+    // nadawanie polom mozliwosci zatwierdzania ich
 
     createTable.then(r => {
 
         if(user == "1"){
-            r.forEach(x => {
-                if(userPoints[x.dataset.cat].confirm == false){
-                    x.addEventListener("click", confirmPoints)
-                }
-            })
+            if(time == 1){
+                r.forEach(x => {
+                    if(userPoints[x.dataset.cat].confirm == false){
+                        x.addEventListener("click", confirmPoints,true)
+                    }
+                })
+            }
         }
         else{
-            BotConfirmPoints()
+            if(time == 1){
+                setTimeout(() => {
+                    BotConfirmPoints()
+                }, 1000);
+            }
         }
         
-
     })
 
-
-    
-
 }
+
+
 
 // czyszczenie tabeli z td które nie zostały klikniete
 
@@ -847,6 +943,7 @@ function clearAndSumTable(r,userPoints){
             userPoints["full"].score + 
             userPoints["maly"].score +
             userPoints["duzy"].score +
+            userPoints["general"].score +
             userPoints["szansa"].score;
     
             resolve(userPoints["sumax2"])

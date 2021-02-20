@@ -272,6 +272,7 @@ header{
         position: absolute;
         bottom: 1rem;
         left: calc((65rem - 18rem) / 2);
+        transition: all .3s ease-in-out;
         button{
             width: 18rem;
             height: 3.5rem;
@@ -283,6 +284,26 @@ header{
             letter-spacing: 5px;
             outline: none;
             text-decoration: none;
+        }
+    }
+    .repeat_btn{
+        width: 10rem;
+        height: 3.5rem;
+        position: absolute;
+        bottom: 1rem;
+        left: calc((65rem - 10rem) / 2);
+        transition: all .3s ease-in-out;
+        display: none;
+        opacity: 0;
+        border: 1px solid red;
+        background-color: rgba(0, 0, 0, 0.39);
+        div{
+            width: 100%;
+            height: 100%;
+            background-image: url("./../images/redo.svg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 2.5rem 2.5rem;
         }
     }
 
@@ -309,7 +330,7 @@ header{
         transition: all .3s ease-in-out;
         transform-origin: 1.5rem 1.5rem;
         margin:  0 3rem;
-        z-index: -2;
+        z-index: 2;
         img{
             position: absolute;
             width:3rem;
