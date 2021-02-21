@@ -1,3 +1,40 @@
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #000000;
+}
+::-webkit-scrollbar-track {
+  background: #666666;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #666666;
+}
+::-webkit-scrollbar-track:active {
+  background: #333333;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+
 *{
     margin: 0; padding: 0;
     box-sizing: border-box;
@@ -14,6 +51,7 @@ body{
     background-repeat: no-repeat;
     background-size: 1920px 1030px;
     background-color: #493828;
+    z-index: -1;
 }
 
 .languages{
@@ -25,7 +63,7 @@ body{
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.534);
     transition: all .3s ease-in-out;
-    z-index: 2000000000000000000;
+    z-index: 200000000000000000000000000000000;
 
     .lan_list{
         position: relative; top: 325px;
@@ -213,15 +251,21 @@ header{
     }
 }
 
-
 .game{
     position: absolute;
+    min-width: 1850px;
+    max-width: 1920px;
+    min-height: 900px;
+    height: 100vh;
+    max-height: 1030px;
     top: 0; left: 0;
     width: 100%;
     height: 100%;
+    z-index: -1;
+    display: block;
+    opacity: 1;
+    transition: all .2s ease-in-out;
 }
-
-
 .tabela{
     position: relative;
     top: 10rem;
@@ -259,7 +303,6 @@ header{
         }
     }
 }
-
 .gracze{
     width: 65rem;
     height: 55rem;
@@ -304,21 +347,67 @@ header{
             background-position: center;
             background-repeat: no-repeat;
             background-size: 2.5rem 2.5rem;
+            pointer-events: none;
         }
     }
 
+    .Turn{
+        width: 15rem; text-align: center;
+        height: 8rem;
+        font-size: 1.6rem;
+        position: absolute; top: calc((55rem - 16rem) / 2); left : calc((65rem - 15rem) / 2);
+        color: white;
+    }
+
     .user_1{
+        .header{
+            width: 10rem; text-align: center;
+            font-size: 1.2rem;
+            position: absolute; bottom: 12rem; left : calc((65rem - 10rem) / 2);
+            color: white;
+        }
         .kostki{
             position: absolute; bottom: 6rem; left: calc((65rem - 33.5rem) / 2);
         }
     }
+    .user_2{
+        transform: rotateZ(90deg);
+        .header{
+            width: 10rem; text-align: center;
+            font-size: 1.2rem;
+            position: absolute; top: 20rem; left: 50.5rem;
+            color: white;
+        }
+        .kostki{
+            position: absolute; top: 25rem; left: 39rem;
+        }
+    }
+    .user_3{
+        .header{
+            width: 10rem; text-align: center;
+            font-size: 1.2rem;
+            position: absolute; top: 6.5rem; left:  calc((65rem - 10rem) / 2);
+            color: white;
+        }
+        .kostki{
+            position: absolute; top: 1rem; left: calc((65rem - 33.5rem) / 2);
+        }
+    }
+    .user_4{
+        transform: rotateZ(-90deg);
+        .header{
+            width: 10rem; text-align: center;
+            font-size: 1.2rem;
+            position: absolute; top: 20rem; left: 2rem;
+            color: white;
+        }
+        .kostki{
+            position: absolute; top: 25rem; right: 39rem;
+        }
+    }
 
 }
-
-
-
 .kostki{
-    border: 1px solid red;
     width: 33.5rem;
     height: 5.5rem;
     position: relative;
@@ -354,6 +443,79 @@ header{
         }
         .kostka_6_side{
             transform: rotateY(0deg) translateZ(-1.5rem);
+        }
+    }
+}
+
+
+
+.History{
+    position: absolute;
+    top: -300vw; left: 0;
+    min-width: 1850px;
+    max-width: 1920px;
+    min-height: 900px;
+    height: 100vh;
+    max-height: 1030px;
+    z-index: 20000;
+    opacity: 0;
+    z-index: -1;
+    transition: all .2s ease-in-out;
+
+    .list{
+        width: 65rem;
+        height: 55rem;
+        padding: 1rem;
+        border: 1px solid white;
+        position: absolute;
+        top: 1rem; right: 1rem;
+        background-color: rgba(0, 0, 0, 0.555);
+        overflow-y: scroll;
+
+
+        .item{
+            position: relative;
+            width: 100%;
+            height: 4rem;
+            display: flex;
+            flex-direction: row;
+            color: white;
+            align-items: center;
+
+            .id{
+                text-transform: uppercase;
+                padding: 0 1rem;
+                border-right:  1px solid white;
+            }
+
+            .users{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+
+                .gracz{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 0 1.5rem;
+                    border-right: 1px solid white;
+
+                    h1{
+                        font-size: 1.2rem;
+                        padding-right: .5rem;
+                    }
+                    p{
+                        font-size: 1rem;
+                    }
+
+                }
+                .gracz[data-winner=true]{
+                    background-color: rgba(168, 10, 10, 0.514);
+                }
+
+            }
+
         }
     }
 }

@@ -4,11 +4,19 @@ const polski = {
         "items" : ["GRA","HISTORIA GIER"]
     },
     "Settings" : {
-        "items" : ["Języki","Ułożenie","Zasady"]
+        "items" : ["Języki","Zasady"]
     },
     "Hover" : {
-        "item1" : ["Polski","Angielski"],
-        "item2" : ["Po Lewej", "Po Prawej"]
+        "item1" : ["Polski","Angielski"]
+    },
+    "Gra" : {
+        "btn" : "GRAJ",
+        "users" : ["Ty", "Gracz #2","Gracz #3","Gracz #4"],
+        "turn" : "Rzuca"
+    },
+    "Table" : {
+        "users" : ["Gracz #1","Gracz #2","Gracz #3","Gracz #4"],
+        "points" : ["jedynki", "dwojki", "trojki", "czworki",'piatki',"szostki","suma","trzy jednakowe","cztery jednakowe","full","maly strit","duzy strit","general","szansa","suma","razem"]
     }
 }
 
@@ -17,21 +25,71 @@ const angielski = {
         "items" : ["GAME","GAME HISTORY "]
     },
     "Settings" : {
-        "items" : ["Languages","Set","Rules"]
+        "items" : ["Languages","Rules"]
     },
     "Hover" : {
-        "item1" : ["POLISH","ENGLISH"],
-        "item2" : ["On Left", "On Right"]
+        "item1" : ["POLISH","ENGLISH"]
+    },
+    "Gra" : {
+        "btn" : "PLAY",
+        "users" : ["You", "User #2","User #3","User #4"],
+        "turn" : "Throws"
+    },
+    "Table" : {
+        "users" : ["User #1","User #2","User #3","User #4"],
+        "points" : ["Aces", "Twos", "Threes", "Fours",'Fives',"Sixes","Sum","Three Of A Kind","Four Of A Kind","Full House","Small Straight","Large Straight","Yahtzee","Chance","Sum","The Final Sum"]
     }
 }
 
+// przycisk gra i historia gier
+
+let currentWindow = "gra";
+
+let graBtn = document.querySelector(".item-1");
+let historiaBtn = document.querySelector(".item-2");
+let historiaBox = document.querySelector(".History");
+let graBox = document.querySelector('.game');
+
+graBtn.addEventListener('click', (e) => {
+    if(currentWindow == "historia"){
+        currentWindow = "gra";
+        historiaBox.style.top = "-300vw";
+        historiaBox.style.opacity = "0"
+        setTimeout(() => {
+            graBox.style.top = "0";
+            graBox.style.opacity = "1";
+        }, 250);
+    }
+})
+
+historiaBtn.addEventListener("click" , (e) => {
+
+    if(currentWindow == "gra"){
+        currentWindow = "historia";
+        graBox.style.top = "-300vw";
+        graBox.style.opacity = "0";
+        setTimeout(() => {
+            historiaBox.style.top = "0vw";
+            historiaBox.style.opacity = "1"
+        }, 250);
+    }
+})
+
+
+
+// jezyki
 
 let jezyk;
+let gameStart = false;
+let tableclone =  document.querySelector(".table_main");
+tableclone = tableclone.cloneNode(true);
+
 
 // wczytanie danych
 
 const lans = document.querySelectorAll(".lan_item");
 
+// wczytywanie jezyka na start
 
 lans.forEach(l => {
     l.addEventListener("click", (e) => {
@@ -51,7 +109,6 @@ lans.forEach(l => {
 
 // ustawianie jezyka
 
-
 function setLan(first = true){
     let writeData = new Promise(resolve => {
         document.querySelectorAll(".nav_item")
@@ -63,6 +120,20 @@ function setLan(first = true){
             l.innerHTML = jezyk.Hover.item1[b];
             l.dataset.value = jezyk.Hover.item1[b];
         })
+        document.querySelectorAll(".user").forEach((u,b) => {
+            u.innerHTML = jezyk.Table.users[b]
+        })
+        document.querySelectorAll(".cat_name").forEach((u,b) => {
+            u.innerHTML = jezyk.Table.points[b]
+        })
+        document.querySelector(".btn_start").innerHTML = jezyk.Gra.btn;
+        document.querySelectorAll(".header_h1").forEach((h,b) => {
+            h.innerHTML = jezyk.Gra.users[b]
+        })
+        if(gameStart){
+            document.querySelector(".Turn_h").innerHTML = jezyk.Gra.turn;
+            document.querySelector(".Turn_u").innerHTML = jezyk.Gra.users[currentUser - 1]
+        }
     })
     
     if(first){
@@ -80,7 +151,6 @@ function setLan(first = true){
         })
     }
 }
-
 
 // settings 
 
@@ -184,7 +254,6 @@ function HideHoverSettings(){
 
 // zmiana jezyka poprzez ustawienia 
 
-
 function settingsChange(e){
     let value = e.path[0].dataset.value;
 
@@ -200,12 +269,7 @@ function settingsChange(e){
     }
 }
 
-
-
-
-
-
-// zacznięcie gry 
+// zacznięcie gry  dane
 
 let start = document.querySelector(".btn_start");
 let repeatBtn = document.querySelector(".repeat_btn")
@@ -276,14 +340,20 @@ let user2Points = JSON.parse(JSON.stringify(defaultPoints))
 let user3Points = JSON.parse(JSON.stringify(defaultPoints))
 let user4Points = JSON.parse(JSON.stringify(defaultPoints)) 
 
+let History = []
 
 
 let round = 0;
 let repeat = 0;
 let currentUser = 0;
+let game = 0;
+
+// zaczecie gry
 
 start.addEventListener("click", (e) => {
     
+
+    gameStart = true;
     start.style.opacity = "0"
 
     StartGame(user1)
@@ -296,7 +366,10 @@ start.addEventListener("click", (e) => {
 
 function StartGame(user){
 
-    currentUser = Number(user.dataset.user)
+    currentUser = Number(user.dataset.user);
+
+    document.querySelector(".Turn_h").innerHTML = jezyk.Gra.turn;
+    document.querySelector(".Turn_u").innerHTML = jezyk.Gra.users[currentUser - 1]
 
     if(user.dataset.user == "1"){
         if(round < 13){
@@ -304,17 +377,200 @@ function StartGame(user){
             repeat = 0;
             FirstRole(user)
         }else{
-            console.log("koniec")
-            console.log(user1Points)
-            console.log(user2Points)
-            console.log(user3Points)
-            console.log(user4Points)
+            
+            GameFinish()
         }
     }else{
         BotRole(user)
     }
 
 }
+// Koniec gry
+
+function GameFinish(){
+
+    let finish = new Promise(resolve => {
+
+        game ++;
+        document.querySelector(".Turn_h").innerHTML = ""
+        document.querySelector(".Turn_u").innerHTML = "";
+
+
+        let maxpoints = [user1Points["razem"],user2Points["razem"],user3Points["razem"],user4Points["razem"]];
+        let max = [...maxpoints];
+        max = max.sort((a,b) => a - b).reverse();
+        max = max[0]
+
+        maxpoints = maxpoints.map(a => {
+            if(a == max){
+                return true;
+            }else {
+                return false;
+            }
+        })
+
+        resolve(maxpoints)
+
+    })
+    
+    finish.then(maxpoints => {
+        History.unshift(
+            {
+                "gra" : game,
+                "ty" : {
+                    "score" : user1Points.razem,
+                    "winner" : maxpoints[0],
+                },
+                "user2" : {
+                    "score" : user2Points.razem,
+                    "winner" : maxpoints[1]
+                },
+                "user3" : {
+                    "score" : user3Points.razem,
+                    "winner" : maxpoints[2]
+                },
+                "user4" : {
+                    "score" : user4Points.razem,
+                    "winner" : maxpoints[3]
+                }
+            }
+        )
+    })
+
+    finish.then(r => {
+
+        CreateHistoryGame()
+        
+    }) 
+
+
+}
+
+// tworzenie listy histori gier
+
+function CreateHistoryGame(){
+
+{/* <div class="item">
+    <div class="id">Gra : 1</div>
+    <div class="users">
+        <div class="gracz-1 gracz" data-winner="true">
+            <h1>Ty > </h1>
+            <p>Punkty : 123</p>
+        </div>
+        <div class="gracz-2 gracz" data-winner="false">
+            <h1>Gracz 2 > </h1>
+            <p>Punkty : 123</p>
+        </div>
+        <div class="gracz-3 gracz" data-winner="false">
+            <h1>Gracz 3 > </h1>
+            <p>Punkty : 123</p>
+        </div>
+        <div class="gracz-4 gracz" data-winner="false">
+            <h1>Gracz 4 > </h1>
+            <p>Punkty : 123</p>
+        </div>
+    </div>
+</div> */}
+
+    let createNewHistoryItem = new Promise(resolve => {
+
+        let list = document.querySelector(".list");
+
+        let items = "";
+
+        History.map(a => {
+            items += `
+                <div class="item">
+                    <div class="id">Gra : ${a.gra}</div>
+                    <div class="users">
+                        <div class="gracz-1 gracz" data-winner="${a.ty.winner}">
+                            <h1>Ty > </h1>
+                            <p>Punkty : ${a.ty.score}</p>
+                        </div>
+                        <div class="gracz-2 gracz" data-winner="${a.user2.winner}">
+                            <h1>Gracz 2 > </h1>
+                            <p>Punkty : ${a.user2.score}</p>
+                        </div>
+                        <div class="gracz-3 gracz" data-winner="${a.user3.winner}">
+                            <h1>Gracz 3 > </h1>
+                            <p>Punkty : ${a.user3.score}</p>
+                        </div>
+                        <div class="gracz-4 gracz" data-winner="${a.user4.winner}">
+                            <h1>Gracz 4 > </h1>
+                            <p>Punkty : ${a.user4.score}</p>
+                        </div>
+                    </div>
+                </div>
+            `
+        })
+
+        list.innerHTML = items;
+
+        resolve(list)
+
+    })
+
+    createNewHistoryItem.then(r => {
+
+        clearCurrentData();
+
+    })
+
+
+}
+
+// czyszczenie danych po grze
+
+function clearCurrentData(){
+
+    let loadTable = new Promise(resolve => {
+
+        let tabela = document.querySelector(".tabela");
+        tabela.removeChild(tabela.children[0])
+        tabela.appendChild(tableclone.cloneNode(true))
+
+        resolve(tabela)
+
+    })
+
+    loadTable.then(r => {
+
+        document.querySelectorAll(".user").forEach((u,b) => {
+            u.innerHTML = jezyk.Table.users[b]
+        })
+        document.querySelectorAll(".cat_name").forEach((u,b) => {
+            u.innerHTML = jezyk.Table.points[b]
+        })
+    })
+
+    loadTable.then(r => {
+        
+        user1Points = JSON.parse(JSON.stringify(defaultPoints))
+        user2Points = JSON.parse(JSON.stringify(defaultPoints))
+        user3Points = JSON.parse(JSON.stringify(defaultPoints))
+        user4Points = JSON.parse(JSON.stringify(defaultPoints))
+    })
+
+    loadTable.then(r => {
+
+        round = 0;
+        repeat = 0;
+        currentUser = 0;
+        gameStart = false;
+        repeatBtn.style.display = "none";
+        setTimeout(() => {
+            repeatBtn.style.opacity = "0";
+            start.style.display = 'block'
+            setTimeout(() => {
+                start.style.opacity = "1"
+            }, 300);
+        }, 300);
+    })
+
+
+
+}
+
 
 // bot 
 
@@ -549,7 +805,6 @@ const NewRole = (e) => {
     }
     
 }
-
 
 //  zliczanie punktów
 
@@ -896,10 +1151,7 @@ function SetPoints(tablica,userPoints,score,user,kostki,time){
 
 }
 
-
-
 // czyszczenie tabeli z td które nie zostały klikniete
-
 
 function clearAndSumTable(r,userPoints){
 
