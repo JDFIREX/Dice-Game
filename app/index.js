@@ -20,27 +20,6 @@ const polski = {
     }
 }
 
-const angielski = {
-    "Header" : {
-        "items" : ["GAME","GAME HISTORY "]
-    },
-    "Settings" : {
-        "items" : ["Languages","Rules"]
-    },
-    "Hover" : {
-        "item1" : ["POLISH","ENGLISH"]
-    },
-    "Gra" : {
-        "btn" : "PLAY",
-        "users" : ["You", "User #2","User #3","User #4"],
-        "turn" : "Throws"
-    },
-    "Table" : {
-        "users" : ["User #1","User #2","User #3","User #4"],
-        "points" : ["Aces", "Twos", "Threes", "Fours",'Fives',"Sixes","Sum","Three Of A Kind","Four Of A Kind","Full House","Small Straight","Large Straight","Yahtzee","Chance","Sum","The Final Sum"]
-    }
-}
-
 // przycisk gra i historia gier
 
 let currentWindow = "gra";
@@ -76,40 +55,61 @@ historiaBtn.addEventListener("click" , (e) => {
 })
 
 
+// rules
+
+let rulesbtn = document.querySelector(".rules");
+let rulesOpen = false;
+let rulesClose = document.querySelector(".close");
+
+rulesbtn.addEventListener("click", openRules)
+rulesClose.addEventListener("click", closeRules)
+
+
+// zamykanie okna z zasadami
+
+function closeRules() {
+
+    if(rulesOpen){
+
+        rulesOpen = false;
+
+        let rulesBox = document.querySelector('.rules_box');
+
+        rulesBox.style.opacity = "0";
+        
+        setTimeout(() => {
+            rulesBox.style.top = "-200vw";
+        }, 300);
+
+    }
+
+}
+
+// otwieranie okna z zasadami
+
+function openRules(e) {
+
+    rulesOpen = true;
+
+    let rulesBox = document.querySelector('.rules_box');
+
+    rulesBox.style.top = "0px";
+
+    setTimeout(() => {
+        rulesBox.style.opacity = "1";
+    }, 300);
+
+
+}
+
 
 // jezyki
 
-let jezyk;
-let gameStart = false;
-let tableclone =  document.querySelector(".table_main");
-tableclone = tableclone.cloneNode(true);
-
-
-// wczytanie danych
-
-const lans = document.querySelectorAll(".lan_item");
-
-// wczytywanie jezyka na start
-
-lans.forEach(l => {
-    l.addEventListener("click", (e) => {
-        let chooseLan = new Promise(resolve => {
-            switch(e.path[0].dataset.jezyk){
-                case "polski" : jezyk = polski ; break;
-            }
-            resolve(jezyk)
-        })
-
-        chooseLan.then(r => {
-            setLan()
-        })
-        
-    })
-})
+let jezyk = polski;
 
 // ustawianie jezyka
 
-function setLan(first = true){
+function setLan(){
     let writeData = new Promise(resolve => {
         document.querySelectorAll(".nav_item")
         .forEach((i,p) => i.innerHTML = jezyk["Header"].items[p])
@@ -136,138 +136,10 @@ function setLan(first = true){
         }
     })
     
-    if(first){
-        writeData.then(r => {
-            setTimeout(() => {
-                document.querySelector(".lan_list").style.top  = "-500px";
-                setTimeout(() => {
-                    document.querySelector(".languages").style.opacity = "0"
-                    setTimeout(() => {
-                        document.querySelector(".languages").style.zIndex = "-100";
-                        document.querySelector(".languages").style.display = "none";
-                    }, 300);
-                }, 300);
-            }, 300);
-        })
-    }
 }
 
-// settings 
+setLan()
 
-let settings = document.querySelector(".settings");
-let settingsOpen = false;
-
-let itemHover = document.querySelectorAll(".item_hover");
-let settingHover = document.querySelector(".settings_hover")
-let settingBox = document.querySelector(".settings_box")
-let list = document.querySelector(".hover_list")
-
-settings.addEventListener("click", ShowSettings)
-
-// pokazywanie ustawien
-
-function ShowSettings(){
-
-    if(!settingsOpen){
-        settingsOpen = !settingsOpen
-        settingBox.style.opacity = "1";
-        settingBox.style.left = "1rem"
-
-        window.addEventListener("click", ListenClick)
-
-    }else if(settingsOpen) {
-        settingsOpen = !settingsOpen
-        settingBox.style.opacity = "0";
-        settingBox.style.left = "-40rem"
-    }
-
-}
-
-// zamykanie ustawien jak sie kliknie poza okno ustawien
-
-function ListenClick(e){
-    let clickList = ["settings_box","setting_list","settings_item", "hover_list","settings_hover","hover_item","settings_btn"];
-
-    if(!clickList.includes(e.path[0].classList[0])){
-        settingsOpen = false;
-        settingBox.style.opacity = "0";
-        settingBox.style.left = "-40rem"
-        window.removeEventListener("click", ListenClick)
-    }
-}
-
-// settings hover box 
-
-itemHover.forEach(l => {
-    l.addEventListener("mouseover", ShowHoverSettings);
-    settingBox.addEventListener("mouseleave", HideHoverSettings)
-})
-
-// ustawienia na najechanie myszką na dane ustawienie
-
-function ShowHoverSettings(e){
-    let item = e.path[0].dataset.item;
-    let listItems = ""
-    let createList = new Promise(resolve => {
-
-        jezyk["Hover"][item].forEach((i,b,c) => {
-            if(b == c.length - 1){
-                listItems += `<li class="hover_item" style="border-bottom:none;" data-value="${i}">${i}</li>`;
-            }else{
-                listItems += `<li class="hover_item" data-value="${i}">${i}</li>`;
-            }
-        });
-
-        resolve(listItems)
-    })
-    
-    createList.then(r => {
-        list.innerHTML = r
-        document.querySelectorAll(".hover_item").forEach(l => l.addEventListener("click", (e) => settingsChange(e)))
-    })
-
-    createList.then(r => {
-
-        setTimeout(() => {
-            settingHover.style.opacity = "1"
-        }, 50);
-
-        let BoxCoords = e.path[0].getBoundingClientRect();
-        let settingBoxCoords = settingBox.getBoundingClientRect()
-        settingBox.style.width = "20rem"
-        settingHover.style.top = ((settingBoxCoords.top - BoxCoords.top) * -1) -8 +"px";
-        settingHover.style.left = (BoxCoords.left + BoxCoords.width + 5) +"px";
-
-    })
-
-}
-
-// chowanie ustawień danego ustawienia na które sie najechało po tym jak sie zjedzie z tych ustawien
-
-function HideHoverSettings(){
-        settingHover.style.opacity = "0"
-        settingHover.style.top = "0";
-        settingHover.style.left = "-40rem";
-        settingBox.style.width = "auto"
-        list.innerHTML = "";
-}
-
-// zmiana jezyka poprzez ustawienia 
-
-function settingsChange(e){
-    let value = e.path[0].dataset.value;
-
-    switch(value){
-        case jezyk["Hover"]["item1"][0] : 
-            jezyk = polski;
-            setLan(first = false);
-        ; break;
-        case jezyk["Hover"]["item1"][1] : 
-            jezyk = angielski;
-            setLan(first = false); 
-        ; break;
-    }
-}
 
 // zacznięcie gry  dane
 
@@ -342,6 +214,9 @@ let user4Points = JSON.parse(JSON.stringify(defaultPoints))
 
 let History = []
 
+let gameStart = false;
+let tableclone =  document.querySelector(".table_main");
+tableclone = tableclone.cloneNode(true);
 
 let round = 0;
 let repeat = 0;
@@ -570,7 +445,6 @@ function clearCurrentData(){
 
 
 }
-
 
 // bot 
 
